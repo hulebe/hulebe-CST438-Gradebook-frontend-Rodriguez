@@ -27,8 +27,9 @@ class Assignment extends React.Component {
     const token = Cookies.get('XSRF-TOKEN');
     fetch(`${SERVER_URL}/gradebook`, 
       {  
-        method: 'GET', 
-        headers: { 'X-XSRF-TOKEN': token }
+        method: 'GET',
+		headers: { 'X-XSRF-TOKEN': token }, 
+        credentials: 'include'
       } )
     .then((response) => response.json()) 
     .then((responseData) => { 
@@ -58,7 +59,7 @@ class Assignment extends React.Component {
         renderCell: (params) => (
           <div>
           <Radio
-            checked={params.row.id == this.state.selected}
+            checked={params.row.id === this.state.selected}
             onChange={this.onRadioClick}
             value={params.row.id}
             color="default"

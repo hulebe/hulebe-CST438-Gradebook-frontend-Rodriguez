@@ -1,8 +1,8 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import {SERVER_URL} from '../constants.js'
-import { BrowserRouter, Switch, Route, Link  } from 'react-router-dom';         
+import {SERVER_URL} from '../constants.js'        
 import { ToastContainer, toast } from 'react-toastify';
+import Cookies from 'js-cookie';
 import 'react-toastify/dist/ReactToastify.css';
 
 class AddAssignment extends React.Component {
@@ -16,11 +16,13 @@ class AddAssignment extends React.Component {
     }
 
     handleSubmit = (event) => {
+		const token = Cookies.get('XSRF-TOKEN');
         event.preventDefault();
         fetch(`${SERVER_URL}/assignment`,
           {
             method: 'POST',
-            headers:{'Content-Type': 'application/json'},
+            headers:{'Content-Type': 'application/json', 'X-XSRF-TOKEN': token },
+			credentials: 'include', 
             body: JSON.stringify({
                 assignmentName: this.state.assignmentName, 
                 dueDate: this.state.dueDate, 
@@ -45,7 +47,7 @@ class AddAssignment extends React.Component {
     
     render() {
         return (
-            <div>
+            <div className="container">
                 <h3>Adding New Assignment(s) </h3>
 
                 <p>Assingment Name:</p>
@@ -58,7 +60,7 @@ class AddAssignment extends React.Component {
                 <input type='text' name='courseId' value={this.state.courseId} onChange={this.handleChange} />
                 <br/><br/>  
 
-                <Button variant="outlined" color="primary" style={{margin: 10}}         
+                <Button id="submit" variant="outlined" color="primary" style={{margin: 10}}         
                     onClick={this.handleSubmit} >Submit</Button> 
                 <ToastContainer autoClose={1500} />
             </div>
